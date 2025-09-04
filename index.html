@@ -910,12 +910,20 @@
                         tileImg.src = dataUrl;
                         tileImg.className = 'w-full h-full object-cover rounded-lg';
                         
-                        // Add individual download link
+                        // Add individual download link (centered round button shown on hover)
                         const downloadLink = document.createElement('a');
                         downloadLink.href = dataUrl;
                         downloadLink.download = `split_image_${i + 1}.jpg`;
+                        downloadLink.setAttribute('aria-label', `Download split image ${i + 1}`);
                         downloadLink.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>`;
-                        downloadLink.className = 'absolute bottom-2 right-2 bg-white/70 text-slate-800 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 backdrop-blur-sm';
+                        downloadLink.className = 'absolute bg-white/70 text-slate-800 p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 backdrop-blur-sm shadow-md';
+                        downloadLink.style.left = '50%';
+                        downloadLink.style.top = '50%';
+                        downloadLink.style.transform = 'translate(-50%, -50%)';
+                        downloadLink.style.border = '1px solid rgba(100, 116, 139, 0.15)';
+                        downloadLink.style.display = 'flex';
+                        downloadLink.style.alignItems = 'center';
+                        downloadLink.style.justifyContent = 'center';
                         
                         tileContainer.appendChild(tileImg);
                         tileContainer.appendChild(downloadLink);
