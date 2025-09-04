@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panoramic Image Splitter (Offline)</title>
+    <style>
+        /*! modern-normalize v1.1.0 | MIT License | https://github.com/sindresorhus/modern-normalize */
+
+        /*
+        Document
+        ========
+        */
+
+        /**
+        Use a better box model (opinionated).
+        */
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        /**
+        Use a more readable tab size (opinionated).
+        */
+
+        :root {
+            -moz-tab-size: 4;
+            tab-size: 4;
+        }
+
+        /**
+        1. Correct the line height in all browsers.
+        2. Prevent adjustments of font size after orientation changes in iOS.
+        */
+
+        html {
+            line-height: 1.15; /* 1 */
+            -webkit-text-size-adjust: 100%; /* 2 */
+        }
+
+        /*
+        Sections
+        ========
+        */
+
+        /**
+        Remove the margin in all browsers.
+        */
+
+        body {
+            margin: 0;
+        }
+
+        /**
+        Improve consistency of default fonts in all browsers. (https://github.com/sindresorhus/modern-normalize/issues/3)
+        */
+
+        body {
+            font-family:
+                system-ui,
+                -apple-system, /* Firefox supports this but not yet `system-ui` */
+                'Segoe UI',
+                Roboto,
+                Helvetica,
+                Arial,
+                sans-serif,
+                'Apple Color Emoji',
+                'Segoe UI Emoji';
+        }
+
+        /*
+        Grouping content
+        ================
+        */
+
+        /**
+        1. Add the correct height in Firefox.
+        2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
+        */
+
+        hr {
+            height: 0; /* 1 */
+            color: inherit; /* 2 */
+        }
+
+        /*
+        Text-level semantics
+        ====================
+        */
+
+        /**
+        Add the correct text decoration in Chrome, Edge, and Safari.
+        */
+
+        abbr[title] {
+            text-decoration: underline dotted;
+        }
+
+        /**
+        Add the correct font weight in Edge and Safari.
+        */
+
+        b,
+        strong {
+            font-weight: bolder;
+        }
+
+        /**
+        1. Improve consistency of default fonts in all browsers. (https://github.com/sindresorhus/modern-normalize/issues/3)
+        2. Correct the odd 'em' font sizing in all browsers.
+        */
+
+        code,
+        kbd,
+        samp,
+        pre {
+            font-family:
+                ui-monospace,
+                SFMono-Regular,
+                Consolas,
+                'Liberation Mono',
+                Menlo,
+                monospace; /* 1 */
+            font-size: 1em; /* 2 */
+        }
+
+        /**
+        Add the correct font size in all browsers.
+        */
+
+        small {
+            font-size: 80%;
+        }
+
+        /**
+        Prevent 'sub' and 'sup' elements from affecting the line height in all browsers.
+        */
+
+        sub,
+        sup {
+            font-size: 75%;
+            line-height: 0;
+            position: relative;
+            vertical-align: baseline;
+        }
+
+        sub {
+            bottom: -0.25em;
+        }
+
+        sup {
+            top: -0.5em;
+        }
+
+        /*
+        Tabular data
+        ============
+        */
+
+        /**
+        1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
+        2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
+        */
+
+        table {
+            text-indent: 0; /* 1 */
+            border-color: inherit; /* 2 */
+        }
+
+        /*
+        Forms
+        =====
+        */
+
+        /**
+        1. Change the font styles in all browsers.
+        2. Remove the margin in Firefox and Safari.
+        */
+
+        button,
+        input,
+        optgroup,
+        select,
+        textarea {
+            font-family: inherit; /* 1 */
+            font-size: 100%; /* 1 */
+            line-height: 1.15; /* 1 */
+            margin: 0; /* 2 */
+        }
+
+        /**
+        Remove the inheritance of text transform in Edge and Firefox.
+        */
+
+        button,
+        select {
+            text-transform: none;
+        }
+
+        /**
+        Correct the inability to style clickable types in iOS and Safari.
+        */
+
+        button,
+        [type='button'],
+        [type='reset'],
+        [type='submit'] {
+            -webkit-appearance: button;
+        }
+
+        /**
+        Remove the inner border and padding in Firefox.
+        */
+
+        ::-moz-focus-inner {
+            border-style: none;
+            padding: 0;
+        }
+
+        /**
+        Restore the focus styles unset by the previous rule.
+        */
+
+        :-moz-focusring {
+            outline: 1px dotted ButtonText;
+        }
+
+        /**
+        Remove the additional ':invalid' styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d794c9be1/layout/style/res/forms.css#L7A3)
+        */
+
+        :-moz-ui-invalid {
+            box-shadow: none;
+        }
+
+        /**
+        Remove the padding so developers are not caught out when they zero out 'fieldset' elements in all browsers.
+        */
+
+        legend {
+            padding: 0;
+        }
+
+        /**
+        Add the correct vertical alignment in Chrome and Firefox.
+        */
+
+        progress {
+            vertical-align: baseline;
+        }
+
+        /**
+        Correct the cursor style of increment and decrement buttons in Safari.
+        */
+
+        ::-webkit-inner-spin-button,
+        ::-webkit-outer-spin-button {
+            height: auto;
+        }
+
+        /**
+        1. Correct the odd appearance in Chrome and Safari.
+        2. Correct the outline style in Safari.
+        */
+
+        [type='search'] {
+            -webkit-appearance: textfield; /* 1 */
+            outline-offset: -2px; /* 2 */
+        }
+
+        /**
+        Remove the inner padding in Chrome and Safari on macOS.
+        */
+
+        ::-webkit-search-decoration {
+            -webkit-appearance: none;
+        }
+
+        /**
+        1. Correct the inability to style clickable types in iOS and Safari.
+        2. Change font properties to 'inherit' in Safari.
+        */
+
+        ::-webkit-file-upload-button {
+            -webkit-appearance: button; /* 1 */
+            font: inherit; /* 2 */
+        }
+
+        /*
+        Interactive
+        ===========
+        */
+
+        /*
+        Add the correct display in Chrome and Safari.
+        */
+
+        summary {
+            display: list-item;
+        }
+    </style>
+    <style>
+        /*! tailwindcss v3.4.1 | MIT License | https://tailwindcss.com */
+        *,::before,::after{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::before,::after{--tw-content:''}html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dl,dd,h1,h2,h3,h4,h5,h6,hr,figure,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}ol,ul,menu{list-style:none;margin:0;padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}button,[role=button]{cursor:pointer}:disabled{cursor:default}img,svg,video,canvas,audio,iframe,embed,object{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]{display:none}.relative{position:relative}.absolute{position:absolute}.bottom-2{bottom:.5rem}.right-2{right:.5rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.my-4{margin-top:1rem;margin-bottom:1rem}.mt-2{margin-top:.5rem}.flex{display:flex}.hidden{display:none}.h-12{height:3rem}.h-48{height:12rem}.h-8{height:2rem}.w-12{width:3rem}.w-8{width:2rem}.w-full{width:100%}.max-w-4xl{max-width:56rem}.cursor-pointer{cursor:pointer}.appearance-none{-webkit-appearance:none;-moz-appearance:none;appearance:none}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-4{gap:1rem}.space-x-2>:not([hidden])~:not([hidden]){--tw-space-x-reverse:0;margin-right:calc(.5rem * var(--tw-space-x-reverse));margin-left:calc(.5rem * calc(1 - var(--tw-space-x-reverse)))}.aspect-square{aspect-ratio:1 / 1}.overflow-hidden{overflow:hidden}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}.border-2{border-width:2px}.border-4{border-width:4px}.border-t-4{border-top-width:4px}.border-dashed{border-style:dashed}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225 / var(--tw-border-opacity))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity))}.bg-green-600{--tw-bg-opacity:1;background-color:rgb(22 163 74 / var(--tw-bg-opacity))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity))}.bg-sky-600{--tw-bg-opacity:1;background-color:rgb(2 132 199 / var(--tw-bg-opacity))}.bg-white\/70{background-color:rgb(255 255 255 / .7)}.p-4{padding:1rem}.p-6{padding:1.5rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-8{padding-left:2rem;padding-right:2rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.text-center{text-align:center}.text-sm{font-size:.875rem;line-height:1.25rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}.text-sky-600{--tw-text-opacity:1;color:rgb(2 132 199 / var(--tw-text-opacity))}.underline{-webkit-text-decoration-line:underline;text-decoration-line:underline}.opacity-0{opacity:0}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / .1), 0 8px 10px -6px rgb(0 0 0 / .1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / .05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.outline-none{outline:2px solid transparent;outline-offset:2px}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4, 0, .2, 1);transition-duration:.15s}.duration-200{transition-duration:.2s}.ease-linear{transition-timing-function:linear}.hover\:border-sky-500:hover{--tw-border-opacity:1;border-color:rgb(14 165 233 / var(--tw-border-opacity))}.hover\:bg-green-700:hover{--tw-bg-opacity:1;background-color:rgb(21 128 61 / var(--tw-bg-opacity))}.hover\:bg-sky-700:hover{--tw-bg-opacity:1;background-color:rgb(3 105 161 / var(--tw-bg-opacity))}.group:hover .group-hover\:opacity-100{opacity:1}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.disabled\:cursor-not-allowed:disabled{cursor:not-allowed}.disabled\:bg-slate-400:disabled{--tw-bg-opacity:1;background-color:rgb(148 163 184 / var(--tw-bg-opacity))}@media (min-width: 640px){.sm\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}}@media (min-width: 768px){.md\:p-8{padding:2rem}.md\:text-4xl{font-size:2.25rem;line-height:2.5rem}.md\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}}@media (min-width: 1024px){.lg\:grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}}
+    </style>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+        }
+        .file-input-label {
+            transition: all 0.2s ease-in-out;
+        }
+        .file-input-label.dragover {
+            background-color: #e0f2fe; /* light blue */
+            border-color: #0284c7; /* sky blue */
+        }
+        .loader {
+            border-top-color: #3498db;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Touch-friendly styles for mobile */
+        #crop-area {
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+        
+        /* Make sure the preview container doesn't interfere with touch */
+        #preview-container {
+            touch-action: pan-x pan-y;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-6 md:p-8 relative">        
+        <header class="text-center mb-8 relative">
+            <img src="./mascot.png" alt="Image Splitter Mascot" class="absolute w-32 h-32 object-contain rounded-lg" style="top: -20px; right: calc(50% + 250px); max-width: 128px; max-height: 128px;" onerror="this.style.display='none'">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900">Panoramic Image Splitter</h1>
+            <p class="text-slate-500 mt-2">Upload a landscape photo to slice it into perfect squares.</p>
+        </header>
+
+        <main>
+            <!-- File Upload Section -->
+            <div id="upload-section" class="mb-6">
+                <label for="image-upload" id="upload-label" class="file-input-label flex justify-center w-full h-48 px-4 transition bg-white border-2 border-slate-300 border-dashed rounded-xl appearance-none cursor-pointer hover:border-sky-500 focus:outline-none">
+                    <span class="flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        <span class="font-medium text-slate-600">
+                            Drop an image or
+                            <span class="text-sky-600 underline">browse</span>
+                        </span>
+                    </span>
+                    <input type="file" id="image-upload" name="image-upload" class="hidden" accept="image/png, image/jpeg, image/webp, image/heic, image/heif, .heic, .heif">
+                </label>
+                <div id="file-name-display" class="text-center text-slate-500 mt-2 text-sm"></div>
+            </div>
+            
+            <!-- Preview Section -->
+            <div id="preview-section" class="hidden mb-6">
+                <h2 class="text-xl font-semibold text-slate-900 mb-4">Preview & Adjust Crop Area</h2>
+                <div class="bg-slate-50 p-4 rounded-lg">
+                    <div id="preview-container" class="relative mx-auto max-w-full rounded-lg" style="max-height: 400px; display: inline-block;">
+                        <img id="preview-image" class="max-w-full h-auto block">
+                        <div id="grid-overlay" class="absolute top-0 left-0 pointer-events-none" style="z-index: 20;">
+                            <!-- Grid lines will be added dynamically -->
+                        </div>
+                        <div id="crop-area" class="absolute cursor-move" 
+                             style="background-color: transparent; border: none; z-index: 40;">
+                            <!-- Resize handles will be added dynamically -->
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center text-sm text-slate-600">
+                        Drag the highlighted area to adjust the crop region. The grid shows how your image will be sliced.
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center mb-8">
+                 <button id="split-button" class="bg-sky-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-sky-700 disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors duration-200" disabled>
+                    Split Image
+                </button>
+            </div>
+
+            <!-- Loader and Status Section -->
+            <div id="status-section" class="text-center my-4 hidden">
+                <div class="flex justify-center items-center">
+                    <div class="loader ease-linear rounded-full border-4 border-t-4 border-slate-200 h-12 w-12 mb-4"></div>
+                </div>
+                <p id="status-text" class="text-lg font-medium text-slate-600">Processing your image...</p>
+            </div>
+
+
+            <!-- Results Section -->
+            <div id="results-section" class="hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold text-slate-900">Resulting Squares</h2>
+                    <button id="download-all-button" class="bg-green-600 text-white font-semibold py-2 px-5 rounded-lg shadow-md hover:bg-green-700 transition-colors duration-200">
+                        Download All (.zip)
+                    </button>
+                </div>
+                <div id="image-grid" class="flex gap-4 bg-slate-50 p-4 rounded-lg overflow-x-auto">
+                    <!-- Split images will be inserted here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+    <script>
+        // Original application script
+        const uploadSection = document.getElementById('upload-section');
+        const uploadLabel = document.getElementById('upload-label');
+        const imageUpload = document.getElementById('image-upload');
+        const fileNameDisplay = document.getElementById('file-name-display');
+        const previewSection = document.getElementById('preview-section');
+        const previewImage = document.getElementById('preview-image');
+        const previewContainer = document.getElementById('preview-container');
+        const gridOverlay = document.getElementById('grid-overlay');
+        const cropArea = document.getElementById('crop-area');
+        const splitButton = document.getElementById('split-button');
+        const statusSection = document.getElementById('status-section');
+        const statusText = document.getElementById('status-text');
+        const resultsSection = document.getElementById('results-section');
+        const imageGrid = document.getElementById('image-grid');
+        const downloadAllButton = document.getElementById('download-all-button');
+
+        let uploadedFile = null;
+        let generatedImageData = [];
+        let cropSettings = {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0
+        };
+        let isDragging = false;
+        let isResizing = false;
+        let dragStart = { x: 0, y: 0 };
+        let resizeHandle = null;
+
+        // Drag and Drop functionality
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadLabel.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadLabel.addEventListener(eventName, () => uploadLabel.classList.add('dragover'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadLabel.addEventListener(eventName, () => uploadLabel.classList.remove('dragover'), false);
+        });
+
+        uploadLabel.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        }
+        
+        // Handle file selection via browse
+        imageUpload.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            const fileNameLower = file.name.toLowerCase();
+            const isHeic = fileNameLower.endsWith('.heic') || fileNameLower.endsWith('.heif');
+
+            if (isHeic) {
+                fileNameDisplay.textContent = `Converting ${file.name}...`;
+                splitButton.disabled = true;
+                statusSection.classList.remove('hidden');
+                statusText.textContent = `Converting HEIC file... this may take a moment.`;
+
+                heic2any({
+                    blob: file,
+                    toType: "image/jpeg",
+                    quality: 0.95,
+                })
+                .then(conversionResult => {
+                    const newFileName = file.name.replace(/\.(heic|heif)$/i, '.jpg');
+                    const convertedFile = new File([conversionResult], newFileName, { type: 'image/jpeg' });
+                    
+                    uploadedFile = convertedFile;
+                    fileNameDisplay.textContent = `Ready: ${convertedFile.name}`;
+                    resultsSection.classList.add('hidden');
+                    imageGrid.innerHTML = '';
+                    statusSection.classList.add('hidden');
+                    showPreview(convertedFile);
+                })
+                .catch(err => {
+                    uploadedFile = null;
+                    fileNameDisplay.textContent = 'Failed to convert HEIC image. The file might be corrupt or unsupported.';
+                    splitButton.disabled = true;
+                    statusSection.classList.add('hidden');
+                    console.error(err);
+                });
+            } else if (file && file.type.startsWith('image/')) {
+                uploadedFile = file;
+                fileNameDisplay.textContent = `Selected: ${file.name}`;
+                resultsSection.classList.add('hidden');
+                imageGrid.innerHTML = '';
+                showPreview(file);
+            } else {
+                uploadedFile = null;
+                fileNameDisplay.textContent = 'Please select a valid image file.';
+                splitButton.disabled = true;
+                previewSection.classList.add('hidden');
+            }
+        }
+
+        // Preview functionality
+        function showPreview(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+                previewImage.onload = () => {
+                    setupCropArea();
+                    previewSection.classList.remove('hidden');
+                    splitButton.disabled = false;
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function setupCropArea() {
+            // Wait a bit for image to fully load and get proper dimensions
+            setTimeout(() => {
+                const imgWidth = previewImage.clientWidth;
+                const imgHeight = previewImage.clientHeight;
+                
+                console.log(`Image dimensions: ${imgWidth} x ${imgHeight}`); // Debug
+                
+                // Determine if landscape or portrait to set initial crop area
+                const isLandscape = imgWidth > imgHeight;
+                const baseSquareSize = Math.min(imgWidth, imgHeight);
+                
+                if (isLandscape) {
+                    // For landscape: height = 1 square, width = multiple squares
+                    const maxSquares = Math.floor(imgWidth / baseSquareSize);
+                    const initialSquares = Math.min(3, maxSquares); // Show up to 3 squares initially
+                    cropSettings.width = initialSquares * baseSquareSize;
+                    cropSettings.height = baseSquareSize;
+                    cropSettings.x = Math.max(0, (imgWidth - cropSettings.width) / 2);
+                    cropSettings.y = Math.max(0, (imgHeight - cropSettings.height) / 2);
+                } else {
+                    // For portrait: width = 1 square, height = multiple squares
+                    const maxSquares = Math.floor(imgHeight / baseSquareSize);
+                    const initialSquares = Math.min(3, maxSquares); // Show up to 3 squares initially
+                    cropSettings.width = baseSquareSize;
+                    cropSettings.height = initialSquares * baseSquareSize;
+                    cropSettings.x = Math.max(0, (imgWidth - cropSettings.width) / 2);
+                    cropSettings.y = Math.max(0, (imgHeight - cropSettings.height) / 2);
+                }
+                
+                console.log(`Crop settings:`, cropSettings); // Debug
+                
+                updateCropAreaDisplay();
+                drawGrid();
+                setupInteractivity();
+            }, 100);
+        }
+
+        function updateCropAreaDisplay() {
+            cropArea.style.position = 'absolute';
+            cropArea.style.left = cropSettings.x + 'px';
+            cropArea.style.top = cropSettings.y + 'px';
+            cropArea.style.width = cropSettings.width + 'px';
+            cropArea.style.height = cropSettings.height + 'px';
+            cropArea.style.zIndex = '40';
+            cropArea.style.backgroundColor = 'rgba(14, 165, 233, 0.15)'; // More visible blue background for dragging
+            cropArea.style.border = '2px solid rgba(14, 165, 233, 0.3)';
+            cropArea.style.display = 'block';
+            cropArea.style.pointerEvents = 'auto';
+            
+            // Make sure handles are visible by adding them dynamically
+            updateResizeHandles();
+            
+            console.log(`Crop area positioned at: ${cropSettings.x}, ${cropSettings.y}, ${cropSettings.width}x${cropSettings.height}`); // Debug
+            console.log(`Crop area element:`, cropArea); // Debug
+        }
+        
+        function updateResizeHandles() {
+            // Clear existing handles
+            const existingHandles = cropArea.querySelectorAll('[data-handle]');
+            existingHandles.forEach(handle => handle.remove());
+            
+            // Create handles dynamically with UI-matching design
+            const handles = [
+                { name: 'nw', top: '-12px', left: '-12px', cursor: 'nw-resize' },
+                { name: 'ne', top: '-12px', right: '-12px', cursor: 'ne-resize' },
+                { name: 'sw', bottom: '-12px', left: '-12px', cursor: 'sw-resize' },
+                { name: 'se', bottom: '-12px', right: '-12px', cursor: 'se-resize' }
+            ];
+            
+            handles.forEach(h => {
+                const handle = document.createElement('div');
+                handle.setAttribute('data-handle', h.name);
+                handle.style.position = 'absolute';
+                handle.style.width = '24px';  // Larger for touch
+                handle.style.height = '24px'; // Larger for touch
+                handle.style.backgroundColor = '#0ea5e9'; // Sky blue to match UI
+                handle.style.border = '3px solid white';
+                handle.style.borderRadius = '50%';
+                handle.style.cursor = h.cursor;
+                handle.style.zIndex = '60';
+                handle.style.boxShadow = '0 3px 8px rgba(14, 165, 233, 0.5)';
+                handle.style.transition = 'all 0.15s ease';
+                handle.style.touchAction = 'none'; // Prevent scrolling on touch
+                
+                // Add hover effect
+                handle.addEventListener('mouseenter', () => {
+                    handle.style.backgroundColor = '#0284c7';
+                    handle.style.transform = 'scale(1.1)';
+                });
+                handle.addEventListener('mouseleave', () => {
+                    handle.style.backgroundColor = '#0ea5e9';
+                    handle.style.transform = 'scale(1)';
+                });
+                
+                if (h.top) handle.style.top = h.top;
+                if (h.bottom) handle.style.bottom = h.bottom;
+                if (h.left) handle.style.left = h.left;
+                if (h.right) handle.style.right = h.right;
+                
+                cropArea.appendChild(handle);
+            });
+        }
+
+        function drawGrid() {
+            gridOverlay.innerHTML = '';
+            
+            const imgWidth = previewImage.clientWidth;
+            const imgHeight = previewImage.clientHeight;
+            const isLandscape = imgWidth > imgHeight;
+            
+            // Set the grid overlay to match the image dimensions and position
+            gridOverlay.style.width = imgWidth + 'px';
+            gridOverlay.style.height = imgHeight + 'px';
+            gridOverlay.style.position = 'absolute';
+            gridOverlay.style.top = '0px';
+            gridOverlay.style.left = '0px';
+            
+            // Calculate square size based on the shorter dimension of the CROP AREA (not the whole image)
+            const cropSquareSize = Math.min(cropSettings.width, cropSettings.height);
+            
+            // Calculate number of squares that fit in the crop area
+            const numSquares = isLandscape ? 
+                Math.floor(cropSettings.width / cropSquareSize) : 
+                Math.floor(cropSettings.height / cropSquareSize);
+            
+            console.log(`Drawing grid: ${numSquares} squares, isLandscape: ${isLandscape}, cropSquareSize: ${cropSquareSize}`); // Debug
+            console.log(`Crop area: ${cropSettings.width}x${cropSettings.height}`); // Debug
+            
+            // Add subtle border around the entire crop area
+            const border = document.createElement('div');
+            border.style.position = 'absolute';
+            border.style.left = cropSettings.x + 'px';
+            border.style.top = cropSettings.y + 'px';
+            border.style.width = cropSettings.width + 'px';
+            border.style.height = cropSettings.height + 'px';
+            border.style.border = '2px dotted #0ea5e9';  // Blue dotted border
+            border.style.pointerEvents = 'none';
+            border.style.zIndex = '30';
+            border.style.backgroundColor = 'rgba(14, 165, 233, 0.08)';  // Very subtle blue tint
+            border.style.boxSizing = 'border-box';
+            gridOverlay.appendChild(border);
+            
+            // Draw subtle dotted grid lines to show the split boundaries
+            for (let i = 1; i < numSquares; i++) {
+                const line = document.createElement('div');
+                line.style.position = 'absolute';
+                line.style.pointerEvents = 'none';
+                line.style.zIndex = '35';
+                line.style.border = '1px dotted #0ea5e9';  // Blue dotted lines
+                line.style.opacity = '0.8';
+                
+                if (isLandscape) {
+                    // Vertical lines for landscape images
+                    const x = cropSettings.x + (i * cropSquareSize);
+                    line.style.left = x + 'px';
+                    line.style.top = cropSettings.y + 'px';
+                    line.style.width = '0px';
+                    line.style.height = cropSettings.height + 'px';
+                    line.style.borderLeft = '2px dotted #0ea5e9';
+                    line.style.borderRight = 'none';
+                    line.style.borderTop = 'none';
+                    line.style.borderBottom = 'none';
+                } else {
+                    // Horizontal lines for portrait images
+                    const y = cropSettings.y + (i * cropSquareSize);
+                    line.style.left = cropSettings.x + 'px';
+                    line.style.top = y + 'px';
+                    line.style.width = cropSettings.width + 'px';
+                    line.style.height = '0px';
+                    line.style.borderTop = '2px dotted #0ea5e9';
+                    line.style.borderRight = 'none';
+                    line.style.borderLeft = 'none';
+                    line.style.borderBottom = 'none';
+                }
+                
+                gridOverlay.appendChild(line);
+            }
+        }
+
+        let interactivitySetup = false;
+        
+        function setupInteractivity() {
+            if (interactivitySetup) return; // Prevent multiple event listeners
+            interactivitySetup = true;
+            
+            console.log('Setting up interactivity'); // Debug
+            
+            // Helper function to get touch/mouse coordinates
+            function getEventCoords(e) {
+                if (e.touches && e.touches.length > 0) {
+                    return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
+                }
+                return { clientX: e.clientX, clientY: e.clientY };
+            }
+            
+            // Helper function to start drag/resize
+            function startInteraction(e) {
+                const coords = getEventCoords(e);
+                
+                if (e.target.dataset.handle) {
+                    isResizing = true;
+                    resizeHandle = e.target.dataset.handle;
+                    console.log('Starting resize with handle:', resizeHandle); // Debug
+                    
+                    // For resizing, store the initial crop settings as reference
+                    dragStart.cropX = cropSettings.x;
+                    dragStart.cropY = cropSettings.y;
+                    dragStart.cropWidth = cropSettings.width;
+                    dragStart.cropHeight = cropSettings.height;
+                    dragStart.mouseX = coords.clientX;
+                    dragStart.mouseY = coords.clientY;
+                } else {
+                    isDragging = true;
+                    console.log('Starting drag'); // Debug
+                    
+                    // For dragging, calculate offset from crop area origin
+                    dragStart.x = coords.clientX - cropSettings.x;
+                    dragStart.y = coords.clientY - cropSettings.y;
+                }
+                
+                e.preventDefault();
+            }
+            
+            // Mouse events
+            cropArea.addEventListener('mousedown', startInteraction);
+            
+            // Touch events for mobile
+            cropArea.addEventListener('touchstart', startInteraction, { passive: false });
+
+            function handleMove(e) {
+                const coords = getEventCoords(e);
+                if (isDragging) {
+                    const newX = coords.clientX - dragStart.x;
+                    const newY = coords.clientY - dragStart.y;
+                    
+                    // Constrain to image bounds
+                    const maxX = previewImage.clientWidth - cropSettings.width;
+                    const maxY = previewImage.clientHeight - cropSettings.height;
+                    
+                    cropSettings.x = Math.max(0, Math.min(newX, maxX));
+                    cropSettings.y = Math.max(0, Math.min(newY, maxY));
+                    
+                    updateCropAreaDisplay();
+                    drawGrid();
+                } else if (isResizing && resizeHandle) {
+                    const imgWidth = previewImage.clientWidth;
+                    const imgHeight = previewImage.clientHeight;
+                    const isLandscape = imgWidth > imgHeight;
+                    
+                    // Get current mouse position relative to the preview container
+                    const rect = previewContainer.getBoundingClientRect();
+                    const mouseX = coords.clientX - rect.left;
+                    const mouseY = coords.clientY - rect.top;
+                    
+                    let newWidth = cropSettings.width;
+                    let newHeight = cropSettings.height;
+                    let newX = cropSettings.x;
+                    let newY = cropSettings.y;
+                    
+                    // Minimum crop area size (allow small squares)
+                    const minCropSize = 50;
+                    
+                    if (isLandscape) {
+                        // For landscape: height determines square size, width is multiple squares
+                        if (resizeHandle.includes('e')) {
+                            // Resize from right edge
+                            newWidth = Math.max(minCropSize, Math.min(mouseX - cropSettings.x, imgWidth - cropSettings.x));
+                        } else if (resizeHandle.includes('w')) {
+                            // Resize from left edge
+                            const rightEdge = cropSettings.x + cropSettings.width;
+                            newX = Math.max(0, Math.min(mouseX, rightEdge - minCropSize));
+                            newWidth = rightEdge - newX;
+                        }
+                        
+                        // Adjust height based on mouse for vertical handles
+                        if (resizeHandle.includes('n')) {
+                            const bottomEdge = cropSettings.y + cropSettings.height;
+                            newY = Math.max(0, Math.min(mouseY, bottomEdge - minCropSize));
+                            newHeight = bottomEdge - newY;
+                        } else if (resizeHandle.includes('s')) {
+                            newHeight = Math.max(minCropSize, Math.min(mouseY - cropSettings.y, imgHeight - cropSettings.y));
+                        }
+                        
+                        // Snap to square grid: height determines square size, width snaps to multiples
+                        const squareSize = newHeight;
+                        const numSquares = Math.max(1, Math.round(newWidth / squareSize));
+                        newWidth = numSquares * squareSize;
+                        
+                    } else {
+                        // For portrait: width determines square size, height is multiple squares
+                        if (resizeHandle.includes('s')) {
+                            // Resize from bottom edge
+                            newHeight = Math.max(minCropSize, Math.min(mouseY - cropSettings.y, imgHeight - cropSettings.y));
+                        } else if (resizeHandle.includes('n')) {
+                            // Resize from top edge
+                            const bottomEdge = cropSettings.y + cropSettings.height;
+                            newY = Math.max(0, Math.min(mouseY, bottomEdge - minCropSize));
+                            newHeight = bottomEdge - newY;
+                        }
+                        
+                        // Adjust width based on mouse for horizontal handles
+                        if (resizeHandle.includes('w')) {
+                            const rightEdge = cropSettings.x + cropSettings.width;
+                            newX = Math.max(0, Math.min(mouseX, rightEdge - minCropSize));
+                            newWidth = rightEdge - newX;
+                        } else if (resizeHandle.includes('e')) {
+                            newWidth = Math.max(minCropSize, Math.min(mouseX - cropSettings.x, imgWidth - cropSettings.x));
+                        }
+                        
+                        // Snap to square grid: width determines square size, height snaps to multiples
+                        const squareSize = newWidth;
+                        const numSquares = Math.max(1, Math.round(newHeight / squareSize));
+                        newHeight = numSquares * squareSize;
+                    }
+                    
+                    // Final bounds checking
+                    newX = Math.max(0, Math.min(newX, imgWidth - newWidth));
+                    newY = Math.max(0, Math.min(newY, imgHeight - newHeight));
+                    
+                    // Apply the new settings
+                    cropSettings.x = Math.max(0, newX);
+                    cropSettings.y = Math.max(0, newY);
+                    cropSettings.width = newWidth;
+                    cropSettings.height = newHeight;
+                    
+                    updateCropAreaDisplay();
+                    drawGrid();
+                }
+            }
+
+            // Mouse events
+            document.addEventListener('mousemove', handleMove);
+            
+            // Touch events for mobile
+            document.addEventListener('touchmove', handleMove, { passive: false });
+
+            function handleEnd() {
+                if (isDragging || isResizing) {
+                    console.log('Ending drag/resize'); // Debug
+                }
+                isDragging = false;
+                isResizing = false;
+                resizeHandle = null;
+            }
+
+            document.addEventListener('mouseup', handleEnd);
+            document.addEventListener('touchend', handleEnd);
+        }
+        
+        // Main split function
+        splitButton.addEventListener('click', () => {
+            if (!uploadedFile) return;
+
+            // Reset UI
+            resultsSection.classList.add('hidden');
+            imageGrid.innerHTML = '';
+            generatedImageData = [];
+            statusSection.classList.remove('hidden');
+            statusText.textContent = 'Processing your image...';
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const originalWidth = img.naturalWidth;
+                    const originalHeight = img.naturalHeight;
+                    
+                    // Calculate scaling factor between display and actual image
+                    const scaleX = originalWidth / previewImage.clientWidth;
+                    const scaleY = originalHeight / previewImage.clientHeight;
+                    
+                    // Convert crop settings to actual image coordinates
+                    const actualCropX = cropSettings.x * scaleX;
+                    const actualCropY = cropSettings.y * scaleY;
+                    const actualCropWidth = cropSettings.width * scaleX;
+                    const actualCropHeight = cropSettings.height * scaleY;
+                    
+                    // Use the same calculation as the preview grid to ensure consistency
+                    const previewIsLandscape = previewImage.clientWidth > previewImage.clientHeight;
+                    
+                    // Calculate square size based on the shorter dimension of the CROP AREA
+                    const cropSquareSize = Math.min(cropSettings.width, cropSettings.height);
+                    const actualSquareSize = Math.min(actualCropWidth, actualCropHeight);
+                    
+                    // Calculate number of squares the same way as preview
+                    const numSquares = previewIsLandscape ? 
+                        Math.floor(cropSettings.width / cropSquareSize) : 
+                        Math.floor(cropSettings.height / cropSquareSize);
+                    
+                    console.log(`Split calculation: numSquares=${numSquares}, actualSquareSize=${actualSquareSize}, previewIsLandscape=${previewIsLandscape}`); // Debug
+
+                    if (numSquares === 0) {
+                        statusText.textContent = 'Image is too small to split.';
+                        return;
+                    }
+
+                    for (let i = 0; i < numSquares; i++) {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = actualSquareSize;
+                        canvas.height = actualSquareSize;
+                        const ctx = canvas.getContext('2d');
+                        
+                        let sourceX = actualCropX;
+                        let sourceY = actualCropY;
+
+                        if (previewIsLandscape) {
+                            sourceX = actualCropX + (i * actualSquareSize);
+                        } else {
+                            sourceY = actualCropY + (i * actualSquareSize);
+                        }
+                        
+                        console.log(`Square ${i + 1}: sourceX=${sourceX}, sourceY=${sourceY}, actualSquareSize=${actualSquareSize}`); // Debug
+                        
+                        // Draw a square portion of the original image onto the canvas
+                        ctx.drawImage(img, sourceX, sourceY, actualSquareSize, actualSquareSize, 0, 0, actualSquareSize, actualSquareSize);
+                        
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.95); // Use JPEG for better file size
+                        generatedImageData.push({ name: `split_image_${i + 1}.jpg`, dataUrl });
+                        
+                        // Create and display the image tile
+                        const tileContainer = document.createElement('div');
+                        tileContainer.className = 'relative group aspect-square overflow-hidden rounded-lg shadow-sm flex-shrink-0 w-48 h-48';
+                        const tileImg = document.createElement('img');
+                        tileImg.src = dataUrl;
+                        tileImg.className = 'w-full h-full object-cover rounded-lg';
+                        
+                        // Add individual download link
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = dataUrl;
+                        downloadLink.download = `split_image_${i + 1}.jpg`;
+                        downloadLink.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>`;
+                        downloadLink.className = 'absolute bottom-2 right-2 bg-white/70 text-slate-800 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 backdrop-blur-sm';
+                        
+                        tileContainer.appendChild(tileImg);
+                        tileContainer.appendChild(downloadLink);
+                        imageGrid.appendChild(tileContainer);
+                    }
+                    
+                    // Show results
+                    statusSection.classList.add('hidden');
+                    resultsSection.classList.remove('hidden');
+                };
+                img.onerror = () => {
+                     statusText.textContent = 'Could not load the image file. Please try another one.';
+                }
+                img.src = e.target.result;
+            };
+            
+            reader.onerror = () => {
+                statusText.textContent = 'Error reading the file.';
+            }
+
+            reader.readAsDataURL(uploadedFile);
+        });
+
+        // Download all images as a zip
+        downloadAllButton.addEventListener('click', () => {
+            if (generatedImageData.length === 0) return;
+
+            const buttonOriginalText = downloadAllButton.textContent;
+            downloadAllButton.textContent = 'Zipping...';
+            downloadAllButton.disabled = true;
+
+            const zip = new JSZip();
+            generatedImageData.forEach(imgData => {
+                const base64Data = imgData.dataUrl.split(',')[1];
+                zip.file(imgData.name, base64Data, { base64: true });
+            });
+
+            zip.generateAsync({ type: 'blob' })
+                .then(function(content) {
+                    saveAs(content, 'split-images.zip');
+                    downloadAllButton.textContent = buttonOriginalText;
+                    downloadAllButton.disabled = false;
+                })
+                .catch(err => {
+                    console.error("Error zipping files:", err);
+                    // Avoid using alert()
+                    statusSection.classList.remove('hidden');
+                    statusText.textContent = 'An error occurred while creating the zip file.';
+                    downloadAllButton.textContent = buttonOriginalText;
+                    downloadAllButton.disabled = false;
+                });
+        });
+    </script>
+
+</body>
+</html>
