@@ -339,6 +339,13 @@
         #preview-container {
             touch-action: pan-x pan-y;
         }
+        
+        /* Mobile: always show per-tile download button */
+        @media (hover: none) and (pointer: coarse) {
+            .tile-download-btn {
+                opacity: 1 !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 flex items-center justify-center min-h-screen p-4">
@@ -916,7 +923,7 @@
                         downloadLink.download = `split_image_${i + 1}.jpg`;
                         downloadLink.setAttribute('aria-label', `Download split image ${i + 1}`);
                         downloadLink.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>`;
-                        downloadLink.className = 'absolute bg-white/70 text-slate-800 p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 backdrop-blur-sm shadow-md';
+                        downloadLink.className = 'tile-download-btn absolute bg-white/70 text-slate-800 p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 backdrop-blur-sm shadow-md';
                         downloadLink.style.left = '50%';
                         downloadLink.style.top = '50%';
                         downloadLink.style.transform = 'translate(-50%, -50%)';
@@ -924,9 +931,30 @@
                         downloadLink.style.display = 'flex';
                         downloadLink.style.alignItems = 'center';
                         downloadLink.style.justifyContent = 'center';
+                        downloadLink.style.zIndex = '10';
+                        downloadLink.style.pointerEvents = 'auto';
                         
                         tileContainer.appendChild(tileImg);
                         tileContainer.appendChild(downloadLink);
+                        
+                        // Robust download handler using Blob + FileSaver for mobile
+                        downloadLink.addEventListener('click', (ev) => {
+                            ev.preventDefault();
+                            try {
+                                const base64 = dataUrl.split(',')[1];
+                                const byteChars = atob(base64);
+                                const byteNumbers = new Array(byteChars.length);
+                                for (let j = 0; j < byteChars.length; j++) {
+                                    byteNumbers[j] = byteChars.charCodeAt(j);
+                                }
+                                const byteArray = new Uint8Array(byteNumbers);
+                                const blob = new Blob([byteArray], { type: 'image/jpeg' });
+                                saveAs(blob, `split_image_${i + 1}.jpg`);
+                            } catch (_) {
+                                // Fallback to default anchor download
+                                downloadLink.click();
+                            }
+                        });
                         imageGrid.appendChild(tileContainer);
                     }
                     
